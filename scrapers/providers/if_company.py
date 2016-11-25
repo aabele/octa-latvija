@@ -11,9 +11,6 @@ from scrapers.base import OCTAScraper
 class IfOCTAScraper(OCTAScraper):
     """
     IF scraper class
-
-    IF does not allow to query more than 30 days before the
-    expiration date of the current insurance policy
     """
 
     base_url = 'https://web.if.lv/mansif/if/policies/Mtpl/entry.aspx'

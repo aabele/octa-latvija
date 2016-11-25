@@ -11,9 +11,6 @@ from scrapers.base import OCTAScraper
 class GjensidigeOCTAScraper(OCTAScraper):
     """
     Gjensidige scraper class
-
-    Gjensidige does not allow to query more than 30 days before the expiration
-    date of the current insurance policy
     """
 
     base_url = 'https://www.gjensidige.lv/pirkt-octa/online-service'
