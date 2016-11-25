@@ -16,8 +16,9 @@ class BaltikumsOCTAScraper(OCTAScraper):
     base_url = 'https://www.polise24.lv/lv/octa-online/'
     car_id_xpath = '//input[@name="regNr"]'
     passport_id_xpath = '//input[@name="aplNr"]'
+    results_loaded_text = 'Apdrošināšanas termiņš un cena'
 
-    def parse_results(self):
+    def _parse_results(self):
         """
         Parse website insurance offer details
 

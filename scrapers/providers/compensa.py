@@ -24,8 +24,9 @@ class CompensaOCTAScraper(OCTAScraper):
     extra_field_value = random.randint(10000000, 99999999)
     accept_terms_xpath = '//label[@for="AgreeToUseData"]/span'
     change_trigger_key = Keys.TAB
+    results_loaded_text = '9 mēneši'
 
-    def parse_results(self):
+    def _parse_results(self):
         """
         Parse website insurance offer details
 

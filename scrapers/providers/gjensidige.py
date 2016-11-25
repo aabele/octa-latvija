@@ -17,8 +17,9 @@ class GjensidigeOCTAScraper(OCTAScraper):
     car_id_xpath = '//input[@id="VehicleRegistrationNumber"]'
     passport_id_xpath = '//input[@id="VehicleRegCertificateNumber"]'
     submit_button_xpath = '//button[@class="btn next"]'
+    results_loaded_text = '9 mēneši'
 
-    def parse_results(self):
+    def _parse_results(self):
         """
         Parse website insurance offer details
 

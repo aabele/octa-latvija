@@ -16,8 +16,9 @@ class SeesamOCTAScraper(OCTAScraper):
     base_url = 'https://www.seesam.lv/polise/#/octa'
     car_id_xpath = '//input[@class="JM"]'
     submit_button_xpath = '//div[@class="DP"]'
+    results_loaded_text = '9 mēneši'
 
-    def parse_results(self):
+    def _parse_results(self):
         """
         Parse website insurance offer details
 

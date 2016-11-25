@@ -18,8 +18,9 @@ class IfOCTAScraper(OCTAScraper):
     passport_id_xpath = '//input[@id="ctl00_ctl00_masterPlhContent_ContentPlaceHolder2_txtCertNr"]'
     submit_button_xpath = '//input[@id="ctl00_ctl00_masterPlhContent_ContentPlaceHolder2_btnSearchNew"]'
     accept_terms_xpath = '//label[@for="ctl00_ctl00_masterPlhContent_ContentPlaceHolder2_chbReadTerms"]'
+    results_loaded_text = '9 mēneši'
 
-    def parse_results(self):
+    def _parse_results(self):
         """
         Parse website insurance offer details
 

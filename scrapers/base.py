@@ -34,7 +34,6 @@ class OCTAScraper(object):
     """
 
     base_url = ''
-    wait_time = 10
 
     car_id_xpath = ''
     passport_id_xpath = ''
@@ -45,6 +44,7 @@ class OCTAScraper(object):
     extra_field_value = ''
 
     change_trigger_key = Keys.ENTER
+    results_loaded_text = ''
 
     def __init__(self, car_id, passport_id):
         """
@@ -68,14 +68,16 @@ class OCTAScraper(object):
 
     # Selenium methods
 
-    def wait_for_ajax(self):
+    def _wait_for_ajax(self):
         """
         Wait until all AJAX requests are done
         """
-        time.sleep(self.wait_time)
+        while True:
+            visible_text = self.driver.find_element_by_xpath('//body').text.lower()
+            if self.results_loaded_text.lower() in visible_text:
+                return
 
-    def _scroll_to(self, element):
-        self.driver.execute_script("return arguments[0].scrollIntoView();", element)
+            time.sleep(1)
 
     def _fill(self, field_xpath, value):
         """
@@ -85,52 +87,53 @@ class OCTAScraper(object):
         :param value: field value
         """
         input_field = self.driver.find_element_by_xpath(field_xpath)
-        self._scroll_to(input_field)
         input_field.send_keys(value)
         input_field.send_keys(self.change_trigger_key)
 
-    def fill_car_id(self):
+    def _fill_car_id(self):
         """
         Find car id input field and fill it
         """
         if self.car_id_xpath:
             self._fill(self.car_id_xpath, self.car_id)
 
-    def fill_passport_id(self):
+    def _fill_passport_id(self):
         """
         Find passport id input field and fill it
         """
         if self.passport_id_xpath:
             self._fill(self.passport_id_xpath, self.passport_id)
 
-    def fill_extra_field(self):
+    def _fill_extra_field(self):
         """
-
-        :return:
+        If there is extra field - find and fill it too
         """
         if self.extra_field_xpath:
             self._fill(self.extra_field_xpath, self.extra_field_value)
 
-    def accept_terms(self):
+    def _accept_terms(self):
         """
         Find accept terms checkbox and check it
         """
         if self.accept_terms_xpath:
             input_field = self.driver.find_element_by_xpath(self.accept_terms_xpath)
-            self._scroll_to(input_field)
             input_field.click()
 
-    def submit_search_form(self):
+    def _submit_search_form(self):
         """
         Find form submit button and click it
         """
         if self.submit_button_xpath:
             submit_button = self.driver.find_element_by_xpath(self.submit_button_xpath)
-            self._scroll_to(submit_button)
             submit_button.click()
-            self.wait_for_ajax()
+        self._wait_for_ajax()
 
-    def parse_results(self):
+    def _parse_results(self):
+        """
+        Parse the results out of page response. Implemented in child classes
+
+        :return: NotImplementedError
+        """
         raise NotImplementedError
 
     def get_data(self):
@@ -139,11 +142,9 @@ class OCTAScraper(object):
 
         :return:
         """
-        self.fill_car_id()
-        self.fill_passport_id()
-        self.accept_terms()
-        self.fill_extra_field()
-        self.submit_search_form()
-        self.wait_for_ajax()
-        return self.parse_results()
-
+        self._fill_car_id()
+        self._fill_passport_id()
+        self._accept_terms()
+        self._fill_extra_field()
+        self._submit_search_form()
+        return self._parse_results()
