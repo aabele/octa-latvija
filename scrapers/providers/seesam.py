@@ -20,6 +20,8 @@ class SeesamOCTAScraper(OCTAScraper):
     def parse_results(self):
         """
         Parse website insurance offer details
+
+        :return: list of containing prices [3months, 6months, 9months, 12months]
         """
         response = []
         items = self.driver.find_elements_by_xpath('//div[@class="DV CN"]')

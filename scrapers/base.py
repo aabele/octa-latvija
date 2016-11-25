@@ -21,9 +21,9 @@ def get_firefox_profile():
     :return: profile instance
     """
     profile = webdriver.FirefoxProfile()
-    profile.set_preference('permissions.default.stylesheet', 2)
-    profile.set_preference('permissions.default.image', 2)
-    profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so', 'false')
+    # profile.set_preference('permissions.default.stylesheet', 2)
+    # profile.set_preference('permissions.default.image', 2)
+    # profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so', 'false')
 
     return profile
 
@@ -39,6 +39,7 @@ class OCTAScraper(object):
     car_id_xpath = ''
     passport_id_xpath = ''
     submit_button_xpath = ''
+    accept_terms_xpath = ''
 
     def __init__(self, car_id, passport_id):
         """ """
@@ -89,6 +90,14 @@ class OCTAScraper(object):
         if self.passport_id_xpath:
             self._fill(self.passport_id_xpath, self.passport_id)
 
+    def accept_terms(self):
+        """
+        Find accept terms checkbox and check it
+        """
+        if self.accept_terms_xpath:
+            input_field = self.driver.find_element_by_xpath(self.accept_terms_xpath)
+            input_field.click()
+
     def submit_search_form(self):
         """
         Find form submit button and click it
@@ -109,6 +118,7 @@ class OCTAScraper(object):
         """
         self.fill_car_id()
         self.fill_passport_id()
+        self.accept_terms()
         self.submit_search_form()
         self.wait_for_ajax()
         return self.parse_results()

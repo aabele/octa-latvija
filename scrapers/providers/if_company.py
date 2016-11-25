@@ -20,10 +20,18 @@ class IfOCTAScraper(OCTAScraper):
     car_id_xpath = '//input[@name="ctl00$ctl00$masterPlhContent$ContentPlaceHolder2$txtRegNr"]'
     passport_id_xpath = '//input[@id="ctl00_ctl00_masterPlhContent_ContentPlaceHolder2_txtCertNr"]'
     submit_button_xpath = '//input[@id="ctl00_ctl00_masterPlhContent_ContentPlaceHolder2_btnSearchNew"]'
+    accept_terms_xpath = '//label[@for="ctl00_ctl00_masterPlhContent_ContentPlaceHolder2_chbReadTerms"]'
 
-    def parse(self):
-        """   """
+    def parse_results(self):
+        """
+        Parse website insurance offer details
 
+        :return: list of containing prices [3months, 6months, 9months, 12months]
+        """
         response = []
-        return response
+        items = self.driver.find_elements_by_xpath('//*[@class="ecmt-text-fat ecmt-text-bold ecmt-text-centered"]/span')
+        for item in items:
+            response.append(item.text.split(' ')[1])
+        return list(reversed(response))
+
 
