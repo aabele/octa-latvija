@@ -30,5 +30,3 @@ class IfOCTAScraper(OCTAScraper):
         for item in items:
             response.append(item.text.split(' ')[1])
         return list(reversed(response))
-
-
