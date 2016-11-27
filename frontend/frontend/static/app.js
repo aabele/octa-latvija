@@ -135,6 +135,7 @@ var project = {};
     function ResultTable () {
         this._container = $("#table-container");
         this._months = [3, 6, 9, 12];
+        this._lowestPrices = [0, 0, 0, 0];
         this._template = _.template('' +
             '<table class="deep-purple-text">' +
             '   <thead>' +
@@ -152,8 +153,8 @@ var project = {};
             '    <tbody>' +
             '       <% _.forEach(rows, function(row) { %>' +
             '           <tr>' +
-            '               <% _.forEach(row, function(col) { %>' +
-            '                   <td class="center" data-field="' +
+            '               <% _.forEach(row, function(col, index) { %>' +
+            '                   <td class="center<% if (parseFloat(col) === lowestPrices[index-1]) { %> deep-purple deep-purple-text text-lighten-5<% }; %>" data-field="' +
             '                       <% if (col !== null && typeof col === "object") { %>' +
             '                           <%- col %>months' +
             '                       <% } else { %>' +
@@ -179,11 +180,31 @@ var project = {};
     ResultTable.prototype = {
 
         /**
+         * Calculate cheapest price for each time period
+         * @private
+         */
+        _updateCheapestPrices: function () {
+
+            var rows = this._data,
+                lowestPrices = this._lowestPrices;
+
+            _.forEach(rows, function (row) {
+                _.forEach(row.slice(1, 5), function (col, index) {
+                    var price = parseFloat(col);
+                    if (price <= lowestPrices[index] || lowestPrices[index] == 0){
+                        lowestPrices[index] = price;
+                    }
+                });
+            });
+        },
+
+        /**
          *
          * @param rowData - array containing all row values
          */
         addRow: function(rowData) {
             this._data.push(rowData);
+            this._updateCheapestPrices();
             this.render()
         },
 
@@ -193,7 +214,8 @@ var project = {};
         render: function(){
             this._container.html(this._template({
                 months: this._months,
-                rows: this._data
+                rows: this._data,
+                lowestPrices: this._lowestPrices
             }))
         }
 
