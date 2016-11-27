@@ -8,24 +8,17 @@ from __future__ import unicode_literals
 import time
 
 from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.keys import Keys
 
 
-_FIREFOX_PATH = '/home/aivis/Projects/octa-latvia/node_modules/geckodriver/bin/geckodriver'
+# Phantom JS config
+phantomjs_config = dict(DesiredCapabilities.PHANTOMJS)
+# phantomjs_config['phantomjs.page.settings.userAgent'] = 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko'
 
+phantomjs_params = ['--ignore-ssl-errors=true', '--ssl-protocol=any', '--web-security=false']
 
-def get_firefox_profile():
-    """
-    Firefox profile tweaks - does not load images and CSS
-
-    :return: profile instance
-    """
-    profile = webdriver.FirefoxProfile()
-    # profile.set_preference('permissions.default.stylesheet', 2)
-    # profile.set_preference('permissions.default.image', 2)
-    # profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so', 'false')
-
-    return profile
+PHANTOMJS_EXECUTABLE_PATH = 'phantomjs'
 
 
 class OCTAScraper(object):
@@ -55,9 +48,9 @@ class OCTAScraper(object):
         self.car_id = car_id
         self.passport_id = passport_id
 
-        self.driver = webdriver.Firefox(
-            firefox_profile=get_firefox_profile(),
-            executable_path=_FIREFOX_PATH)
+        self.driver = webdriver.PhantomJS(PHANTOMJS_EXECUTABLE_PATH, desired_capabilities=phantomjs_config, service_args=phantomjs_params)
+        self.driver.set_window_size(1024, 768)
+
         self.driver.get(self.base_url)
 
     def __del__(self):

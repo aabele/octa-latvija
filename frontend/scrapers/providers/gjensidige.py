@@ -28,5 +28,5 @@ class GjensidigeOCTAScraper(OCTAScraper):
         response = []
         items = self.driver.find_elements_by_xpath('//div[@id="packages"]//span[@style="font-size:18px;"]')
         for item in items:
-            response.append(item.text.split(' ')[0])
+            response.append(item.text.split(' ')[0].replace(',', '.'))
         return response
