@@ -16,6 +16,12 @@ from scrapers import query_octa_providers
 DEBUG = True
 CACHE_PERIOD = 60 * 60 * 24
 
+try:
+    from local_settings import *
+except ImportError:
+    pass
+
+
 app = Flask(__name__, static_url_path='/static')
 cache = Cache(app,config={'CACHE_TYPE': 'simple'})
 
