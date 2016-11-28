@@ -175,6 +175,7 @@ var project = {};
             '   </tbody>' +
             '</table>');
         this._data = [];
+
     }
 
     ResultTable.prototype = {
@@ -199,19 +200,19 @@ var project = {};
         },
 
         /**
-         *
+         * Add new row to the result table data
          * @param rowData - array containing all row values
          */
         addRow: function(rowData) {
             this._data.push(rowData);
             this._updateCheapestPrices();
-            this.render()
+            this._render()
         },
 
         /**
          * Render table html
          */
-        render: function(){
+        _render: function(){
             this._container.html(this._template({
                 months: this._months,
                 rows: this._data,
@@ -251,6 +252,7 @@ var project = {};
             }
         };
 
+        $(document).on(globalSubmit, $.proxy(this._resetTable, this));
         $(document).on(globalSubmit, $.proxy(this._fetchResults, this));
 
     }
@@ -258,7 +260,16 @@ var project = {};
     OCTARobot.prototype = {
 
         /**
+         * Destroy and create new table
+         * @private
+         */
+        _resetTable: function () {
+            this._table = new ResultTable();
+        },
+
+        /**
          * Fetch results and feed to the table class
+         * @private
          */
         _fetchResults: function () {
 
@@ -287,6 +298,7 @@ var project = {};
                         rowsLoaded++;
                         if (rowsLoaded === rowsTotal){
                             loader.hide();
+                            form.enable();
                         }
                     }
                 });
